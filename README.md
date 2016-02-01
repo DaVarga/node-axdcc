@@ -1,61 +1,70 @@
 #Node.js advanced XDCC library.
 example requires Node.js IRC library. (`npm install irc`)
 
-IRC library for downloading files from XDCC bots.
 
-Works with Windows and Linux
 
 ##Usage
 
-    var axdcc = require('./lib/axdcc');
-    var request = new axdcc.Request(client, args);
+    var Axdcc = require('./lib/axdcc');
+    var request = new Axdcc(client, args);
     request.emit("start");
 
 Requests an XDCC from `{client}` based on `{args}`
 
 `{client}` IRC client (from IRC library)
 
-`{args}` Information about the XDCC pack
+`{opts}` Information about the XDCC pack
     
-    args = {
-        "pack"              : < XDCC Pack ID >,
-        "nick"              : < XDCC Bot Nick >,
-        "path"              : < Path to download to >,
-        "resume"            : < Boolean, overwrite instead of resume >,
-        "progressInterval"  : < Interval in seconds progress is updated >
+##Options
+    opts = {
+         pack: 0,       // {int} XDCC Pack ID
+         nick: "",      // {string} XDCC Bot Nick
+         path: "",      // {string} Destination directory
+         resume: true,  // {boolean} resume files instead overwrite
+         ssl: false,    // {boolean} uses ssl encrypted file transfer via XDCC SSEND.
+         unencryptedFallback: false,    // {boolean} uses unencrypted file transfer via XDCC SEND if bot don't supports SSL or SSL version is not compatible with nodejs.
+         progressThreshold: 1024        // {int} emit progress every x Byte received
     }
 
-##Callbacks
+##Events
 
     request.on('connect', pack);
 Emitted when an XDCC transfer starts
 
-`{pack}`      is the XDCC pack information, see `Pack format` below
+`{pack}`      XDCC pack information, see `Pack format` below
 
 -------
 
-    request.on('progress', pack, recieved);
+    request.on('progress', pack);
 Emitted when an XDCC transfer receives data
 
-`{pack}`      is the XDCC pack information, see `Pack format` below
-
-`{recieved}`  is the amount of data received
+`{pack}`      XDCC pack information, see `Pack format` below
  
 -------
  
     request.on('complete', pack);
 Emitted when an XDCC transfer is complete
 
-`{pack}`      is the XDCC pack information, see `Pack format` below
+`{pack}`      XDCC pack information, see `Pack format` below
 
 -------
 
     request.on('dlerror', pack, error);
 Emitted when an XDCC transfer encounters an error
 
-`{pack}`      is the XDCC pack information, see `Pack format` below
+`{pack}`      XDCC pack information, see `Pack format` below
 
-`{error}`     is the error data
+`{error}`     error data
+ 
+ -------
+ 
+     request.on('message', pack, msg);
+ Emitted on message
+ 
+ `{pack}`      XDCC pack information, see `Pack format` below
+ 
+ `{msg}`       message data
+  
  
 ##Listeners
 
@@ -70,15 +79,17 @@ When emitted, all XDCC transfers are cancelled.
 -------
 
     request.emit('kill');
-When emitted, Request don't react on irc anymore.
+Removes all listeners
 
 ##Pack format
     pack = {
-        "command"   : <DCC command of transfer(SEND/ACCEPT)>
-        "filename"  : <Name of file being transferred>
-        "ip"        : <IP of file sender>
-        "port"      : <Port of file sender>
-        "filesize"  : <Size of file being transferred>
-        "resumepos" : <Resume position of the file>
-        "location"  : <Path to download to>
+        status    : "", //status of pack (connected/canceled...)
+        fileName  : "", //filename
+        ip        : "", //ip
+        port      : 0,  //port
+        received  : 0,  //received bytes
+        fileSize  : 0,  //size of requested file
+        resumePos : 0,  //Resume position of the file
+        type      : "" //xdcc mode (SEND/SSEND/ACCEPT)
     }
+    

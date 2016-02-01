@@ -4,7 +4,7 @@
 
 // Get dependencies
 var irc = require('irc');
-var axdcc = require('./lib/axdcc');
+var Axdcc = require('./lib/axdcc');
 var stdin = process.openStdin();
 
 
@@ -30,16 +30,20 @@ console.log("-- CONNECTING TO " + config.server + " AS " + config.nick);
 // Request pack #1337 from ``XDCC-Bot''
 // Store the file in ``/path/to/Downloads''
 // Resume if the file is existent
-var request = new axdcc.Request(client, {
+var request = new Axdcc(client, {
     pack: '#1337',
     nick: 'XDCC-Bot',
     path: '/path/to/Downloads',
     resume: true
-}).on("dlerror", error).on("connect", connect).on("progress", progress).on("complete", complete);
+}).on("dlerror", dlerror)
+    .on("connect", connect)
+    .on("progress", progress)
+    .on("message", message)
+    .on("complete", complete);
 
 
 
-client.on('join', function (channel, nick, message) {
+client.on('join', function (channel, nick) {
     if (nick == config.nick && channel == config.options.channels[0]) {
         console.log('-- Joined ' + channel);
 
@@ -57,24 +61,28 @@ client.on('join', function (channel, nick, message) {
 
 // XDCC handlers
 function connect (pack) {
-    console.log("-- BEGINING XDCC OF " + pack.filename);
+    console.log("-- XDCC CONNECT: " + JSON.stringify(pack));
 }
 
-function progress (pack, recieved) {
-    var progress = Math.floor(recieved / pack.filesize * 100);
-    process.stdout.write("\033[s");
-    process.stdout.write("-- " + progress + "% DONE " + pack.filename);
-    process.stdout.write("\033[u");
+function message (pack, msg) {
+    console.log("-- XDCC MESSAGE: " + JSON.stringify(pack) + ": " + JSON.stringify(msg));
+}
+
+function progress (pack) {
+    console.log("-- XDCC PROGRESS: " + JSON.stringify(pack));
 }
 
 function complete (pack) {
-    console.log("-- COMPLETED XDCC OF " + pack.filename);
+    console.log("-- COMPLETED XDCC: " + JSON.stringify(pack));
 }
 
-function error (pack, error) {
-    console.log("-- XDCC ERROR WITH " + pack.filename + ": " + JSON.stringify(error));
+function dlerror (pack, error) {
+    console.log("-- XDCC ERROR: " + JSON.stringify(pack) + ": " + JSON.stringify(error));
 }
 
+
+
+//irc error handling
 client.on("error", function (message) {
     console.log("-- IRC ERROR: " + JSON.stringify(message));
 });

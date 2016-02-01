@@ -1,7 +1,7 @@
 {
   "name": "axdcc",
   "description": "advanced XDCC library for node",
-  "version": "0.2.23",
+  "version": "1.0.0-RC1",
   "repository": {
     "type": "git",
     "url": "http://github.com/DaVarga/node-xdcc"
@@ -11,7 +11,7 @@
   },
   "main": "lib/axdcc",
   "engines": {
-    "node": ">=0.10.13"
+    "node": ">=4.1.0"
   },
   "readmeFilename": "README.md"
 }
