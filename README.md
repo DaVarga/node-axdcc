@@ -1,6 +1,6 @@
-#Node.js advanced XDCC library.
-example requires Node.js IRC library. (`npm install irc`)
+#Node.js advanced XDCC library. [![Build Status](https://travis-ci.org/DaVarga/node-axdcc.svg?branch=es6)](https://travis-ci.org/DaVarga/node-axdcc)
 
+example requires Node.js IRC library ^4.0.0. (`npm install irc`)
 
 
 ##Usage

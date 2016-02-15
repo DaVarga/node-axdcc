@@ -1,15 +1,28 @@
 {
   "name": "axdcc",
   "description": "advanced XDCC library for node",
-  "version": "1.0.0-RC1",
+  "version": "1.0.0-RC.2",
   "repository": {
     "type": "git",
-    "url": "http://github.com/DaVarga/node-xdcc"
+    "url": "http://github.com/DaVarga/node-axdcc"
   },
   "bugs": {
-    "url": "http://github.com/DaVarga/node-xdcc/issues"
+    "url": "http://github.com/DaVarga/node-axdcc/issues"
   },
+  "contributors": [
+    {
+      "name": "Daniel Varga",
+      "email": "varga.daniel@gmx.de"
+    }
+  ],
   "main": "lib/axdcc",
+  "peerDependencies": {
+    "irc": "^0.4.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.1.1"
+  },
   "engines": {
     "node": ">=4.1.0"
   },

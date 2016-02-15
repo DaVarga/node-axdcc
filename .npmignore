@@ -1,3 +1,7 @@
-.git
-.gitignore
-.idea
+*
+!lib
+!package.json
+!README.md
+!HISTORY.md
+!LICENSE
+!.npmignore
